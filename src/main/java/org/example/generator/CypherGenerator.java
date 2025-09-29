@@ -2,10 +2,8 @@ package org.example.generator;
 
 import org.example.util.FileUtils;
 
-import java.util.Random;
-
 /**
- *  Cypher code generator for Neo4j
+ * Cypher code generator for Neo4j
  */
 public class CypherGenerator extends Generator {
 
@@ -15,8 +13,12 @@ public class CypherGenerator extends Generator {
 
     @Override
     public void generate() {
-        String command = generateUsers() + generatePosts() + generateTags() + generateTagPost() +
-                generateRelationships() + generateInteractions();
+        String command = generateUsers() +
+                generatePosts() +
+                generateTags() +
+                generateTagPost() +
+                generateRelationships() +
+                generateInteractions();
 
         FileUtils.writeToFile("cypher.txt", command);
     }
@@ -27,9 +29,9 @@ public class CypherGenerator extends Generator {
         sb.append("UNWIND [\n");
 
         for (int i = 1; i <= QTD; i++) {
-            String nome = NOMES.get(random(0, NOMES.size() - 1));
-            int idade = random(1, 99);
-            String cidade = CIDADES.get(random(0, CIDADES.size() - 1));
+            String nome = getRandomName();
+            int idade = getRandomInt(1, 99);
+            String cidade = getRandomCity();
 
             sb.append(String.format("      {id: %d, nome: %s, idade: %d, cidade: %s}\n",
                     i, nome, idade, cidade)
@@ -72,11 +74,6 @@ public class CypherGenerator extends Generator {
     private String generateInteractions() {
         //TODO Post - PUBLICOU, CURTIU, COMENTOU -> Post
         return "";
-    }
-
-    private int random(int min, int max) {
-        Random rand = new Random();
-        return rand.nextInt((max - min) + 1) + min;
     }
 
 }

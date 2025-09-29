@@ -3,7 +3,7 @@ package org.example.generator;
 import org.example.util.FileUtils;
 
 /**
- *  AQL Code generator for ArangoDB
+ * AQL Code generator for ArangoDB
  */
 public class AqlGenerator extends Generator {
 

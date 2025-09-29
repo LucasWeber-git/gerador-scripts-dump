@@ -1,21 +1,33 @@
 package org.example.generator;
 
-import org.example.util.FileUtils;
+import com.github.javafaker.Faker;
 
-import java.util.List;
+import java.util.Locale;
+import java.util.Random;
 
 public abstract class Generator {
 
-    protected final List<String> NOMES;
-    protected final List<String> CIDADES;
+    private final Faker faker = new Faker(new Locale("pt-BR"));
+
     protected final int QTD;
 
     public Generator(int qtd) {
         this.QTD = qtd;
-        this.NOMES = FileUtils.getNomes();
-        this.CIDADES = FileUtils.getCidades();
     }
 
     public abstract void generate();
+
+    protected String getRandomName() {
+        return faker.name().firstName();
+    }
+
+    protected String getRandomCity() {
+        return faker.address().city();
+    }
+
+    protected int getRandomInt(int min, int max) {
+        Random rand = new Random();
+        return rand.nextInt((max - min) + 1) + min;
+    }
 
 }
