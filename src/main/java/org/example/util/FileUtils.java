@@ -1,4 +1,4 @@
-package org.example;
+package org.example.util;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -12,7 +12,8 @@ public class FileUtils {
 
     private static final Path PATH_CIDADES = Paths.get("src/main/resources/cidades.csv");
     private static final Path PATH_NOMES = Paths.get("src/main/resources/nomes.csv");
-    private static final Path PATH_OUTPUT = Paths.get("src/main/resources/output.txt");
+
+    private static final String PATH_OUTPUT = "src/main/resources/output/";
 
     private static final String COLON = ",";
     private static final String SEMI_COLON = ";";
@@ -39,9 +40,11 @@ public class FileUtils {
         }
     }
 
-    public static void writeToFile(String content) {
+    public static void writeToFile(String filename, String content) {
+        Path path = Paths.get(PATH_OUTPUT + filename);
+
         try {
-            Files.writeString(PATH_OUTPUT, content);
+            Files.writeString(path, content);
         } catch (IOException e) {
             e.printStackTrace();
         }

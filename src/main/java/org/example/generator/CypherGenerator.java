@@ -1,25 +1,24 @@
-package org.example;
+package org.example.generator;
 
-import java.util.List;
+import org.example.util.FileUtils;
+
 import java.util.Random;
 
-public class Generator {
+/**
+ *  Cypher code generator for Neo4j
+ */
+public class CypherGenerator extends Generator {
 
-    private final List<String> NOMES;
-    private final List<String> CIDADES;
-    private final int QTY;
-
-    public Generator(int qty) {
-        this.QTY = qty;
-        this.NOMES = FileUtils.getNomes();
-        this.CIDADES = FileUtils.getCidades();
+    public CypherGenerator(int qtd) {
+        super(qtd);
     }
 
+    @Override
     public void generate() {
         String command = generateUsers() + generatePosts() + generateTags() + generateTagPost() +
                 generateRelationships() + generateInteractions();
 
-        FileUtils.writeToFile(command);
+        FileUtils.writeToFile("cypher.txt", command);
     }
 
     private String generateUsers() {
@@ -27,7 +26,7 @@ public class Generator {
 
         sb.append("UNWIND [\n");
 
-        for (int i = 1; i <= QTY; i++) {
+        for (int i = 1; i <= QTD; i++) {
             String nome = NOMES.get(random(0, NOMES.size() - 1));
             int idade = random(1, 99);
             String cidade = CIDADES.get(random(0, CIDADES.size() - 1));

@@ -1,0 +1,108 @@
+UNWIND [
+      {id: 1, nome: IANDRA, idade: 83, cidade: Naque}
+      {id: 2, nome: CATERINA, idade: 33, cidade: Rodeiro}
+      {id: 3, nome: OZILDA, idade: 69, cidade: Florianópolis}
+      {id: 4, nome: DIONI, idade: 55, cidade: Garuva}
+      {id: 5, nome: KATIUSCIA, idade: 15, cidade: Jordão}
+      {id: 6, nome: IONEIDE, idade: 31, cidade: Carlos Chagas}
+      {id: 7, nome: TASSIANO, idade: 22, cidade: Rio das Antas}
+      {id: 8, nome: FELISMAR, idade: 63, cidade: Rio das Ostras}
+      {id: 9, nome: KETLE, idade: 40, cidade: São João do Caiuá}
+      {id: 10, nome: VITORIA, idade: 99, cidade: Charqueada}
+      {id: 11, nome: OTILIO, idade: 45, cidade: Salto Grande}
+      {id: 12, nome: ODEMAR, idade: 47, cidade: Pilar}
+      {id: 13, nome: JANICLECIA, idade: 31, cidade: Ibicaraí}
+      {id: 14, nome: HELIA, idade: 38, cidade: Olho d'Água do Casado}
+      {id: 15, nome: AUDENORA, idade: 73, cidade: Caxias do Sul}
+      {id: 16, nome: JEDALVA, idade: 78, cidade: Itapecuru Mirim}
+      {id: 17, nome: JULLYA, idade: 49, cidade: Mantena}
+      {id: 18, nome: ALEXSON, idade: 33, cidade: Vitória}
+      {id: 19, nome: CLAUDENIR, idade: 98, cidade: Santo Antônio do Descoberto}
+      {id: 20, nome: ROMA, idade: 27, cidade: Cambira}
+      {id: 21, nome: RANDAL, idade: 79, cidade: Embu das Artes}
+      {id: 22, nome: CLEILA, idade: 94, cidade: Sampaio}
+      {id: 23, nome: CLEUDSON, idade: 99, cidade: Espírito Santo do Pinhal}
+      {id: 24, nome: ANDER, idade: 14, cidade: Calçado}
+      {id: 25, nome: LINDOFO, idade: 41, cidade: Pinto Bandeira}
+      {id: 26, nome: TONE, idade: 60, cidade: Irituia}
+      {id: 27, nome: STANLEY, idade: 69, cidade: Teolândia}
+      {id: 28, nome: VANGIVALDO, idade: 95, cidade: Guiratinga}
+      {id: 29, nome: VICTORIA, idade: 12, cidade: Juazeirinho}
+      {id: 30, nome: DENIVALDA, idade: 9, cidade: Goioerê}
+      {id: 31, nome: MARINILDE, idade: 59, cidade: Cajuru}
+      {id: 32, nome: JECINA, idade: 8, cidade: Vila Rica}
+      {id: 33, nome: ALISSOM, idade: 72, cidade: Guairaçá}
+      {id: 34, nome: MAURA, idade: 47, cidade: Caieiras}
+      {id: 35, nome: JORDANE, idade: 19, cidade: Igarassu}
+      {id: 36, nome: ADRESSA, idade: 26, cidade: Bonito}
+      {id: 37, nome: ALCIO, idade: 46, cidade: Bandeira do Sul}
+      {id: 38, nome: ELENA, idade: 21, cidade: Turmalina}
+      {id: 39, nome: UADSON, idade: 50, cidade: Pedras de Fogo}
+      {id: 40, nome: VALDIVIA, idade: 8, cidade: Rianápolis}
+      {id: 41, nome: PATROCINA, idade: 87, cidade: Bonfim}
+      {id: 42, nome: ADENI, idade: 88, cidade: Cortês}
+      {id: 43, nome: UENDERSON, idade: 21, cidade: Umburatiba}
+      {id: 44, nome: LIANDRO, idade: 57, cidade: Eugênio de Castro}
+      {id: 45, nome: MARISANDRA, idade: 29, cidade: São Gonçalo}
+      {id: 46, nome: MAISA, idade: 23, cidade: Caranaíba}
+      {id: 47, nome: DOM, idade: 22, cidade: Alto Rio Doce}
+      {id: 48, nome: AVERALDO, idade: 87, cidade: Tuneiras do Oeste}
+      {id: 49, nome: RENIVAN, idade: 80, cidade: Guajará}
+      {id: 50, nome: FABRICIANO, idade: 65, cidade: Jarinu}
+      {id: 51, nome: ODEMIR, idade: 43, cidade: Gentio do Ouro}
+      {id: 52, nome: CARLAS, idade: 82, cidade: São Pedro das Missões}
+      {id: 53, nome: MACEL, idade: 62, cidade: Jaboatão dos Guararapes}
+      {id: 54, nome: HONORATO, idade: 89, cidade: Ramilândia}
+      {id: 55, nome: ANGEL, idade: 40, cidade: Flores de Goiás}
+      {id: 56, nome: RAIK, idade: 40, cidade: Terenos}
+      {id: 57, nome: IANE, idade: 17, cidade: Irituia}
+      {id: 58, nome: KARINA, idade: 64, cidade: Curvelândia}
+      {id: 59, nome: ADEMILSO, idade: 35, cidade: Santa Salete}
+      {id: 60, nome: ADENILTO, idade: 44, cidade: Campinápolis}
+      {id: 61, nome: JACY, idade: 37, cidade: Tracunhaém}
+      {id: 62, nome: IRIANA, idade: 80, cidade: Sambaíba}
+      {id: 63, nome: JUCIMEIRE, idade: 85, cidade: Arenópolis}
+      {id: 64, nome: GLAUCINEIDE, idade: 25, cidade: Zacarias}
+      {id: 65, nome: PLABO, idade: 96, cidade: Brejo Grande}
+      {id: 66, nome: HEBERT, idade: 46, cidade: Aliança}
+      {id: 67, nome: WALLACE, idade: 36, cidade: Brumadinho}
+      {id: 68, nome: JARDIELE, idade: 58, cidade: Montes Claros de Goiás}
+      {id: 69, nome: CLAUCIA, idade: 92, cidade: Leme}
+      {id: 70, nome: LEOCIR, idade: 5, cidade: Mariápolis}
+      {id: 71, nome: THAINAR, idade: 51, cidade: Leme}
+      {id: 72, nome: NARIA, idade: 7, cidade: Cedral}
+      {id: 73, nome: ASSUCENA, idade: 10, cidade: Arcos}
+      {id: 74, nome: MAIKOM, idade: 19, cidade: Baependi}
+      {id: 75, nome: ARCILIA, idade: 35, cidade: Coivaras}
+      {id: 76, nome: RAILLA, idade: 71, cidade: Unaí}
+      {id: 77, nome: CLEVES, idade: 21, cidade: Varjão}
+      {id: 78, nome: FURTUNATO, idade: 81, cidade: Pracinha}
+      {id: 79, nome: TARCISO, idade: 50, cidade: Divino de São Lourenço}
+      {id: 80, nome: ROSIELMA, idade: 97, cidade: Boa Viagem}
+      {id: 81, nome: NATALIANA, idade: 26, cidade: Chã de Alegria}
+      {id: 82, nome: ROSENITA, idade: 57, cidade: Minas do Leão}
+      {id: 83, nome: NERCI, idade: 15, cidade: Tailândia}
+      {id: 84, nome: IRACILENE, idade: 38, cidade: Pantano Grande}
+      {id: 85, nome: ECILIO, idade: 74, cidade: Dores do Indaiá}
+      {id: 86, nome: JOAREIS, idade: 4, cidade: Sento Sé}
+      {id: 87, nome: ROSNGELA, idade: 11, cidade: Morungaba}
+      {id: 88, nome: ROBELIO, idade: 8, cidade: Cerqueira César}
+      {id: 89, nome: ANELITA, idade: 95, cidade: Maceió}
+      {id: 90, nome: EDURDO, idade: 54, cidade: Pontalinda}
+      {id: 91, nome: ALINY, idade: 6, cidade: Sud Mennucci}
+      {id: 92, nome: NANCY, idade: 24, cidade: Santana}
+      {id: 93, nome: ADOLPHO, idade: 28, cidade: Cândido Mota}
+      {id: 94, nome: DUCINEA, idade: 44, cidade: Perolândia}
+      {id: 95, nome: CARLAN, idade: 32, cidade: Ribeirão Cascalheira}
+      {id: 96, nome: MARCELENE, idade: 32, cidade: São João do Araguaia}
+      {id: 97, nome: ULYSSES, idade: 15, cidade: Itaperuçu}
+      {id: 98, nome: WALASE, idade: 77, cidade: Coronel Pilar}
+      {id: 99, nome: WELTON, idade: 23, cidade: Divinolândia}
+      {id: 100, nome: MARIVAN, idade: 58, cidade: Dias d'Ávila}
+] AS u
+CREATE(u:Usuario {
+      id: u.id,
+      nome: u.nome,
+      idade: u.idade,
+      cidade: u.cidade
+});
