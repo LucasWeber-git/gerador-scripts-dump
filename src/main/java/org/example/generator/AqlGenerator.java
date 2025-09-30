@@ -12,7 +12,7 @@ public class AqlGenerator extends Generator {
     }
 
     @Override
-    public void generate() {
+    public void gerar() {
         //TODO
         FileUtils.writeToFile("AQL.txt", "teste");
     }

@@ -14,9 +14,9 @@ public class Main {
         Generator cypherGenerator = new CypherGenerator(qty);
         Generator gremlinGenerator = new GremlinGenerator(qty);
 
-        aqlGenerator.generate();
-        cypherGenerator.generate();
-        gremlinGenerator.generate();
+        aqlGenerator.gerar();
+        cypherGenerator.gerar();
+        gremlinGenerator.gerar();
     }
 
 }

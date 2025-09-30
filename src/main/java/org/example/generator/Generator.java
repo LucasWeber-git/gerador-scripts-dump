@@ -2,12 +2,17 @@ package org.example.generator;
 
 import com.github.javafaker.Faker;
 
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.Date;
 import java.util.Locale;
-import java.util.Random;
+import java.util.concurrent.TimeUnit;
+
+import static java.time.format.DateTimeFormatter.ISO_OFFSET_DATE_TIME;
 
 public abstract class Generator {
 
-    private final Faker faker = new Faker(new Locale("pt-BR"));
+    protected final Faker faker = new Faker(new Locale("pt-BR"));
 
     protected final int QTD;
 
@@ -15,19 +20,14 @@ public abstract class Generator {
         this.QTD = qtd;
     }
 
-    public abstract void generate();
+    public abstract void gerar();
 
-    protected String getRandomName() {
-        return faker.name().firstName();
-    }
+    protected String getRandomDate() {
+        Date date = faker.date().past(2500, TimeUnit.DAYS);
 
-    protected String getRandomCity() {
-        return faker.address().city();
-    }
+        ZonedDateTime zonedDtm = date.toInstant().atZone(ZoneId.of("America/Sao_Paulo"));
 
-    protected int getRandomInt(int min, int max) {
-        Random rand = new Random();
-        return rand.nextInt((max - min) + 1) + min;
+        return zonedDtm.format(ISO_OFFSET_DATE_TIME);
     }
 
 }

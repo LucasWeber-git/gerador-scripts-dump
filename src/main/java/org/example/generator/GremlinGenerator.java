@@ -12,7 +12,7 @@ public class GremlinGenerator extends Generator {
     }
 
     @Override
-    public void generate() {
+    public void gerar() {
         //TODO
         FileUtils.writeToFile("gremlin.txt", "teste");
     }
