@@ -10,6 +10,9 @@ import java.util.Map;
  */
 public class CypherGenerator extends Generator {
 
+    private final String BREAK = "\n";
+    private final String VIRGULA = ",\n";
+
     private final int QTD_POSTS;
     private final int QTD_TAGS;
     private final int QTD_RELACIONAMENTOS;
@@ -54,18 +57,19 @@ public class CypherGenerator extends Generator {
             int idade = faker.random().nextInt(1, 99);
             String cidade = faker.address().city();
 
-            sb.append(String.format("    {id: %d, nome: \"%s\", idade: %d, cidade: \"%s\"}\n",
+            sb.append(String.format("    {id: %d, nome: \"%s\", idade: %d, cidade: \"%s\"}",
                     i, nome, idade, cidade)
             );
+            sb.append(i < QTD ? VIRGULA : BREAK);
         }
 
         sb.append("""
-                ] AS u
+                ] AS values
                 CREATE(u:Usuario {
-                    id: u.id,
-                    nome: u.nome,
-                    idade: u.idade,
-                    cidade: u.cidade
+                    id: values.id,
+                    nome: values.nome,
+                    idade: values.idade,
+                    cidade: values.cidade
                 });
                 
                 """);
@@ -87,20 +91,21 @@ public class CypherGenerator extends Generator {
             int qtdComentarios = faker.random().nextInt(0, 1000);
             int qtdCompartilhamentos = faker.random().nextInt(0, 100);
 
-            sb.append(String.format("    {id: %d, conteudo: \"%s\", data: \"%s\", qtd_curtidas: %d, qtd_comentarios: %d, qtd_compartilhamentos: %d}\n",
+            sb.append(String.format("    {id: %d, conteudo: \"%s\", data: \"%s\", qtd_curtidas: %d, qtd_comentarios: %d, qtd_compartilhamentos: %d}",
                     i, conteudo, data, qtdCurtidas, qtdComentarios, qtdCompartilhamentos)
             );
+            sb.append(i < QTD_POSTS ? VIRGULA : BREAK);
         }
 
         sb.append("""
-                ] AS p
+                ] AS values
                 CREATE(p:Post {
-                    id: p.id,
-                    conteudo: p.conteudo,
-                    data: p.data,
-                    qtd_curtidas: p.qtd_curtidas
-                    qtd_comentarios: p.qtd_comentarios
-                    qtd_compartilhamentos: p.qtd_compartilhamentos
+                    id: values.id,
+                    conteudo: values.conteudo,
+                    data: values.data,
+                    qtd_curtidas: values.qtd_curtidas,
+                    qtd_comentarios: values.qtd_comentarios,
+                    qtd_compartilhamentos: values.qtd_compartilhamentos
                 });
                 
                 """);
@@ -114,35 +119,35 @@ public class CypherGenerator extends Generator {
     private String gerarTags() {
         return """
                 UNWIND[
-                    {id: 1, nome: "humor"}
-                    {id: 2, nome: "política"}
-                    {id: 3, nome: "memes"}
-                    {id: 4, nome: "viagem"}
-                    {id: 5, nome: "fotografia"}
-                    {id: 6, nome: "arte"}
-                    {id: 7, nome: "pintura"}
-                    {id: 8, nome: "DIY"}
-                    {id: 9, nome: "música"}
-                    {id: 10, nome: "cinema"}
-                    {id: 11, nome: "livros"}
-                    {id: 12, nome: "cultura pop"}
-                    {id: 13, nome: "comida"}
-                    {id: 14, nome: "treino"}
-                    {id: 15, nome: "dieta"}
-                    {id: 16, nome: "tecnologia"}
-                    {id: 17, nome: "programação"}
-                    {id: 18, nome: "marketing"}
-                    {id: 19, nome: "moda"}
-                    {id: 20, nome: "maquiagem"}
-                    {id: 21, nome: "lifestyle"}
-                    {id: 22, nome: "pets"}
-                    {id: 23, nome: "motivacional"}
-                    {id: 24, nome: "curiosidades"}
+                    {id: 1, nome: "humor"},
+                    {id: 2, nome: "política"},
+                    {id: 3, nome: "memes"},
+                    {id: 4, nome: "viagem"},
+                    {id: 5, nome: "fotografia"},
+                    {id: 6, nome: "arte"},
+                    {id: 7, nome: "pintura"},
+                    {id: 8, nome: "DIY"},
+                    {id: 9, nome: "música"},
+                    {id: 10, nome: "cinema"},
+                    {id: 11, nome: "livros"},
+                    {id: 12, nome: "cultura pop"},
+                    {id: 13, nome: "comida"},
+                    {id: 14, nome: "treino"},
+                    {id: 15, nome: "dieta"},
+                    {id: 16, nome: "tecnologia"},
+                    {id: 17, nome: "programação"},
+                    {id: 18, nome: "marketing"},
+                    {id: 19, nome: "moda"},
+                    {id: 20, nome: "maquiagem"},
+                    {id: 21, nome: "lifestyle"},
+                    {id: 22, nome: "pets"},
+                    {id: 23, nome: "motivacional"},
+                    {id: 24, nome: "curiosidades"},
                     {id: 25, nome: "tutoriais"}
-                ] AS t
+                ] AS values
                 CREATE(t:Tag {
-                    id: t.id,
-                    nome: t.nome
+                    id: values.id,
+                    nome: values.nome
                 });
                 
                 """;
@@ -159,7 +164,8 @@ public class CypherGenerator extends Generator {
             int tagId = faker.random().nextInt(1, QTD_TAGS);
             int usuarioId = faker.random().nextInt(1, QTD);
 
-            sb.append(String.format("    {post_id: %d, usuario_id: %d, tag_id: %d}\n", i, usuarioId, tagId));
+            sb.append(String.format("    {post_id: %d, usuario_id: %d, tag_id: %d}", i, usuarioId, tagId));
+            sb.append(i < QTD_POSTS ? VIRGULA : BREAK);
         }
 
         sb.append("""
@@ -194,7 +200,8 @@ public class CypherGenerator extends Generator {
             }
 
             relations.put(usuarioA, usuarioB);
-            sb.append(String.format("    {usuario_a: %d, usuario_b: %d, data: \"%s\"}\n", usuarioA, usuarioB, data));
+            sb.append(String.format("    {usuario_a: %d, usuario_b: %d, data: \"%s\"}", usuarioA, usuarioB, data));
+            sb.append(i < QTD_RELACIONAMENTOS ? VIRGULA : BREAK);
         }
 
         sb.append("""
@@ -211,24 +218,97 @@ public class CypherGenerator extends Generator {
      * Usuario - CURTIU -> Post
      */
     private String gerarCurtidas() {
-        //TODO (QTD_CURTIDAS)
-        return "";
+        Map<Integer, Integer> relations = new HashMap<>();
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("UNWIND [\n");
+
+        for (int i = 0; i <= QTD_CURTIDAS; i++) {
+            int usuarioId = faker.random().nextInt(1, QTD);
+            int postId = faker.random().nextInt(1, QTD_POSTS);
+            String data = getRandomDate();
+
+            if (relations.get(usuarioId) == null || !relations.get(usuarioId).equals(postId)) {
+                relations.put(usuarioId, postId);
+                sb.append(String.format("    {usuario_id: %d, post_id: %d, data: \"%s\"}", usuarioId, postId, data));
+                sb.append(i < QTD_CURTIDAS ? VIRGULA : BREAK);
+            }
+        }
+
+        sb.append("""
+                ] AS values
+                MATCH (u:Usuario {id: values.usuario_id}), (p:Post {id: values.post_id})
+                CREATE (u)-[:CURTIU {data: values.data}]->(p);
+                
+                """);
+
+        return sb.toString();
     }
 
     /**
      * Usuario - COMENTOU -> Post
      */
     private String gerarComentarios() {
-        //TODO (QTD_COMENTARIOS)
-        return "";
+        Map<Integer, Integer> relations = new HashMap<>();
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("UNWIND [\n");
+
+        for (int i = 0; i <= QTD_COMENTARIOS; i++) {
+            int usuarioId = faker.random().nextInt(1, QTD);
+            int postId = faker.random().nextInt(1, QTD_POSTS);
+            String data = getRandomDate();
+            String comentario = faker.lorem().paragraph();
+
+            if (relations.get(usuarioId) == null || !relations.get(usuarioId).equals(postId)) {
+                relations.put(usuarioId, postId);
+
+                sb.append(String.format("    {usuario_id: %d, post_id: %d, data: \"%s\", comentario: \"%s\"}",
+                        usuarioId, postId, data, comentario
+                ));
+                sb.append(i < QTD_COMENTARIOS ? VIRGULA : BREAK);
+            }
+        }
+
+        sb.append("""
+                ] AS values
+                MATCH (u:Usuario {id: values.usuario_id}), (p:Post {id: values.post_id})
+                CREATE (u)-[:COMENTOU {data: values.data, comentario: values.comentario}]->(p);
+                
+                """);
+
+        return sb.toString();
     }
 
     /**
      * Usuario - COMPARTILHOU -> Post
      */
     private String gerarCompartilhamentos() {
-        //TODO (QTD_COMPARTILHAMENTOS)
-        return "";
+        Map<Integer, Integer> relations = new HashMap<>();
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("UNWIND [\n");
+
+        for (int i = 0; i <= QTD_COMPARTILHAMENTOS; i++) {
+            int usuarioId = faker.random().nextInt(1, QTD);
+            int postId = faker.random().nextInt(1, QTD_POSTS);
+            String data = getRandomDate();
+
+            if (relations.get(usuarioId) == null || !relations.get(usuarioId).equals(postId)) {
+                relations.put(usuarioId, postId);
+                sb.append(String.format("    {usuario_id: %d, post_id: %d, data: \"%s\"}", usuarioId, postId, data));
+                sb.append(i < QTD_COMPARTILHAMENTOS ? VIRGULA : BREAK);
+            }
+        }
+
+        sb.append("""
+                ] AS values
+                MATCH (u:Usuario {id: values.usuario_id}), (p:Post {id: values.post_id})
+                CREATE (u)-[:COMPARTILHOU {data: values.data}]->(p);
+                
+                """);
+
+        return sb.toString();
     }
 
 }
