@@ -3,26 +3,24 @@ package org.example.generator;
 import org.example.util.FileUtils;
 
 /**
- * Gerador de código Gremlin para o Amazon Neptune e o Azure Cosmos
+ * Gerador de arquivo CSV para o ArangoDB
  */
-public class GremlinGenerator extends Generator {
+public class CsvGenerator extends Generator {
 
-    public GremlinGenerator(int qtdUsuarios) {
+    public CsvGenerator(int qtdUsuarios) {
         super(qtdUsuarios);
     }
 
     @Override
     public void gerar() {
-        String command = gerarUsuarios() +
-                gerarPosts() +
-                gerarTags() +
-                gerarPublicacoes() +
-                gerarRelacionamentos() +
-                gerarCurtidas() +
-                gerarComentarios() +
-                gerarCompartilhamentos();
-
-        FileUtils.writeToFile("gremlin/script.txt", command);
+        FileUtils.writeToFile("csv/usuarios.csv", gerarUsuarios());
+        FileUtils.writeToFile("csv/posts.csv", gerarPosts());
+        FileUtils.writeToFile("csv/tags.csv", gerarTags());
+        FileUtils.writeToFile("csv/publicacoes.csv", gerarPublicacoes());
+        FileUtils.writeToFile("csv/relacionamentos.csv", gerarRelacionamentos());
+        FileUtils.writeToFile("csv/curtidas.csv", gerarCurtidas());
+        FileUtils.writeToFile("csv/comentarios.csv", gerarComentarios());
+        FileUtils.writeToFile("csv/compartilhamentos.csv", gerarCompartilhamentos());
     }
 
     @Override

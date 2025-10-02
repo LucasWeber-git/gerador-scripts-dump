@@ -6,29 +6,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Cypher code generator for Neo4j
+ * Gerador de código Cypher para o Neo4j
  */
 public class CypherGenerator extends Generator {
 
-    private final String BREAK = "\n";
-    private final String VIRGULA = ",\n";
-
-    private final int QTD_POSTS;
-    private final int QTD_TAGS;
-    private final int QTD_RELACIONAMENTOS;
-    private final int QTD_CURTIDAS;
-    private final int QTD_COMENTARIOS;
-    private final int QTD_COMPARTILHAMENTOS;
-
     public CypherGenerator(int qtdUsuarios) {
         super(qtdUsuarios);
-
-        QTD_POSTS = (qtdUsuarios * 3);
-        QTD_TAGS = 25;
-        QTD_RELACIONAMENTOS = (qtdUsuarios * 2);
-        QTD_CURTIDAS = (qtdUsuarios * 10);
-        QTD_COMENTARIOS = (qtdUsuarios * 5);
-        QTD_COMPARTILHAMENTOS = (qtdUsuarios * 3);
     }
 
     @Override
@@ -42,17 +25,15 @@ public class CypherGenerator extends Generator {
                 gerarComentarios() +
                 gerarCompartilhamentos();
 
-        FileUtils.writeToFile("cypher.txt", command);
+        FileUtils.writeToFile("cypher/script.cypher", command);
     }
 
-    /**
-     * Create Usuario
-     */
-    private String gerarUsuarios() {
+    @Override
+    protected String gerarUsuarios() {
         StringBuilder sb = new StringBuilder();
         sb.append("UNWIND [\n");
 
-        for (int i = 1; i <= QTD; i++) {
+        for (int i = 1; i <= QTD_USUARIOS; i++) {
             String nome = faker.name().firstName();
             int idade = faker.random().nextInt(1, 99);
             String cidade = faker.address().city();
@@ -60,7 +41,7 @@ public class CypherGenerator extends Generator {
             sb.append(String.format("    {id: %d, nome: \"%s\", idade: %d, cidade: \"%s\"}",
                     i, nome, idade, cidade)
             );
-            sb.append(i < QTD ? VIRGULA : BREAK);
+            sb.append(i < QTD_USUARIOS ? VIRGULA_NL : NOVA_LINHA);
         }
 
         sb.append("""
@@ -77,10 +58,8 @@ public class CypherGenerator extends Generator {
         return sb.toString();
     }
 
-    /**
-     * Create Post
-     */
-    private String gerarPosts() {
+    @Override
+    protected String gerarPosts() {
         StringBuilder sb = new StringBuilder();
         sb.append("UNWIND [\n");
 
@@ -94,7 +73,7 @@ public class CypherGenerator extends Generator {
             sb.append(String.format("    {id: %d, conteudo: \"%s\", data: \"%s\", qtd_curtidas: %d, qtd_comentarios: %d, qtd_compartilhamentos: %d}",
                     i, conteudo, data, qtdCurtidas, qtdComentarios, qtdCompartilhamentos)
             );
-            sb.append(i < QTD_POSTS ? VIRGULA : BREAK);
+            sb.append(i < QTD_POSTS ? VIRGULA_NL : NOVA_LINHA);
         }
 
         sb.append("""
@@ -113,10 +92,8 @@ public class CypherGenerator extends Generator {
         return sb.toString();
     }
 
-    /**
-     * Create Tag
-     */
-    private String gerarTags() {
+    @Override
+    protected String gerarTags() {
         return """
                 UNWIND[
                     {id: 1, nome: "humor"},
@@ -153,19 +130,17 @@ public class CypherGenerator extends Generator {
                 """;
     }
 
-    /**
-     * Post - PUBLICADO_POR -> Usuario
-     */
-    private String gerarPublicacoes() {
+    @Override
+    protected String gerarPublicacoes() {
         StringBuilder sb = new StringBuilder();
         sb.append("UNWIND [\n");
 
         for (int i = 1; i <= QTD_POSTS; i++) {
             int tagId = faker.random().nextInt(1, QTD_TAGS);
-            int usuarioId = faker.random().nextInt(1, QTD);
+            int usuarioId = faker.random().nextInt(1, QTD_USUARIOS);
 
             sb.append(String.format("    {post_id: %d, usuario_id: %d, tag_id: %d}", i, usuarioId, tagId));
-            sb.append(i < QTD_POSTS ? VIRGULA : BREAK);
+            sb.append(i < QTD_POSTS ? VIRGULA_NL : NOVA_LINHA);
         }
 
         sb.append("""
@@ -179,18 +154,16 @@ public class CypherGenerator extends Generator {
         return sb.toString();
     }
 
-    /**
-     * Usuario - SEGUE -> Usuario
-     */
-    private String gerarRelacionamentos() {
+    @Override
+    protected String gerarRelacionamentos() {
         Map<Integer, Integer> relations = new HashMap<>();
 
         StringBuilder sb = new StringBuilder();
         sb.append("UNWIND [\n");
 
         for (int i = 0; i <= QTD_RELACIONAMENTOS; i++) {
-            int usuarioA = faker.random().nextInt(1, QTD);
-            int usuarioB = faker.random().nextInt(1, QTD);
+            int usuarioA = faker.random().nextInt(1, QTD_USUARIOS);
+            int usuarioB = faker.random().nextInt(1, QTD_USUARIOS);
             String data = getRandomDate();
 
             if (usuarioA == usuarioB) {
@@ -201,7 +174,7 @@ public class CypherGenerator extends Generator {
 
             relations.put(usuarioA, usuarioB);
             sb.append(String.format("    {usuario_a: %d, usuario_b: %d, data: \"%s\"}", usuarioA, usuarioB, data));
-            sb.append(i < QTD_RELACIONAMENTOS ? VIRGULA : BREAK);
+            sb.append(i < QTD_RELACIONAMENTOS ? VIRGULA_NL : NOVA_LINHA);
         }
 
         sb.append("""
@@ -214,24 +187,22 @@ public class CypherGenerator extends Generator {
         return sb.toString();
     }
 
-    /**
-     * Usuario - CURTIU -> Post
-     */
-    private String gerarCurtidas() {
+    @Override
+    protected String gerarCurtidas() {
         Map<Integer, Integer> relations = new HashMap<>();
 
         StringBuilder sb = new StringBuilder();
         sb.append("UNWIND [\n");
 
         for (int i = 0; i <= QTD_CURTIDAS; i++) {
-            int usuarioId = faker.random().nextInt(1, QTD);
+            int usuarioId = faker.random().nextInt(1, QTD_USUARIOS);
             int postId = faker.random().nextInt(1, QTD_POSTS);
             String data = getRandomDate();
 
             if (relations.get(usuarioId) == null || !relations.get(usuarioId).equals(postId)) {
                 relations.put(usuarioId, postId);
                 sb.append(String.format("    {usuario_id: %d, post_id: %d, data: \"%s\"}", usuarioId, postId, data));
-                sb.append(i < QTD_CURTIDAS ? VIRGULA : BREAK);
+                sb.append(i < QTD_CURTIDAS ? VIRGULA_NL : NOVA_LINHA);
             }
         }
 
@@ -245,17 +216,15 @@ public class CypherGenerator extends Generator {
         return sb.toString();
     }
 
-    /**
-     * Usuario - COMENTOU -> Post
-     */
-    private String gerarComentarios() {
+    @Override
+    protected String gerarComentarios() {
         Map<Integer, Integer> relations = new HashMap<>();
 
         StringBuilder sb = new StringBuilder();
         sb.append("UNWIND [\n");
 
         for (int i = 0; i <= QTD_COMENTARIOS; i++) {
-            int usuarioId = faker.random().nextInt(1, QTD);
+            int usuarioId = faker.random().nextInt(1, QTD_USUARIOS);
             int postId = faker.random().nextInt(1, QTD_POSTS);
             String data = getRandomDate();
             String comentario = faker.lorem().paragraph();
@@ -266,7 +235,7 @@ public class CypherGenerator extends Generator {
                 sb.append(String.format("    {usuario_id: %d, post_id: %d, data: \"%s\", comentario: \"%s\"}",
                         usuarioId, postId, data, comentario
                 ));
-                sb.append(i < QTD_COMENTARIOS ? VIRGULA : BREAK);
+                sb.append(i < QTD_COMENTARIOS ? VIRGULA_NL : NOVA_LINHA);
             }
         }
 
@@ -280,24 +249,22 @@ public class CypherGenerator extends Generator {
         return sb.toString();
     }
 
-    /**
-     * Usuario - COMPARTILHOU -> Post
-     */
-    private String gerarCompartilhamentos() {
+    @Override
+    protected String gerarCompartilhamentos() {
         Map<Integer, Integer> relations = new HashMap<>();
 
         StringBuilder sb = new StringBuilder();
         sb.append("UNWIND [\n");
 
         for (int i = 0; i <= QTD_COMPARTILHAMENTOS; i++) {
-            int usuarioId = faker.random().nextInt(1, QTD);
+            int usuarioId = faker.random().nextInt(1, QTD_USUARIOS);
             int postId = faker.random().nextInt(1, QTD_POSTS);
             String data = getRandomDate();
 
             if (relations.get(usuarioId) == null || !relations.get(usuarioId).equals(postId)) {
                 relations.put(usuarioId, postId);
                 sb.append(String.format("    {usuario_id: %d, post_id: %d, data: \"%s\"}", usuarioId, postId, data));
-                sb.append(i < QTD_COMPARTILHAMENTOS ? VIRGULA : BREAK);
+                sb.append(i < QTD_COMPARTILHAMENTOS ? VIRGULA_NL : NOVA_LINHA);
             }
         }
 
