@@ -17,7 +17,6 @@ public abstract class Generator {
 
 
     protected final String NOVA_LINHA = "\n";
-    protected final String VIRGULA = ",";
     protected final String VIRGULA_NL = ",\n";
 
     protected final int QTD_USUARIOS;
