@@ -10,9 +10,6 @@ import java.util.Map;
  */
 public class CsvGenerator extends Generator {
 
-    private static final String FT_INT = "%d";
-    private static final String FT_STRING = "\"%s\"";
-
     public CsvGenerator(int qtdUsuarios) {
         super(qtdUsuarios);
     }
