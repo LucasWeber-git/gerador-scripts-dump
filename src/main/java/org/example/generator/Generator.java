@@ -31,7 +31,7 @@ public abstract class Generator {
         QTD_USUARIOS = qtdUsuarios;
         QTD_POSTS = (qtdUsuarios * 3);
         QTD_TAGS = 25;
-        QTD_RELACIONAMENTOS = (qtdUsuarios * 2);
+        QTD_RELACIONAMENTOS = (qtdUsuarios * 10);
         QTD_CURTIDAS = (qtdUsuarios * 10);
         QTD_COMENTARIOS = (qtdUsuarios * 5);
         QTD_COMPARTILHAMENTOS = (qtdUsuarios * 3);
