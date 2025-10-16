@@ -3,7 +3,9 @@ package org.example.generator;
 import org.example.util.FileUtils;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Gerador de código Cypher para o Neo4j
@@ -156,25 +158,21 @@ public class CypherGenerator extends Generator {
 
     @Override
     protected String gerarRelacionamentos() {
-        Map<Integer, Integer> relations = new HashMap<>();
+        Map<Integer, Set<Integer>> relations = new HashMap<>();
 
         StringBuilder sb = new StringBuilder();
         sb.append("UNWIND [\n");
 
-        for (int i = 0; i <= QTD_RELACIONAMENTOS; i++) {
+        for (int i = 1; i <= QTD_RELACIONAMENTOS; i++) {
             int usuarioA = faker.random().nextInt(1, QTD_USUARIOS);
             int usuarioB = faker.random().nextInt(1, QTD_USUARIOS);
             String data = getRandomDate();
 
-            if (usuarioA == usuarioB) {
-                continue;
-            } else if (relations.get(usuarioA) != null && relations.get(usuarioA).equals(usuarioB)) {
-                continue;
+            if (usuarioA != usuarioB && notExists(relations, usuarioA, usuarioB)) {
+                relations.computeIfAbsent(usuarioA, k -> new HashSet<>()).add(usuarioB);
+                sb.append(String.format("    {usuario_a: %d, usuario_b: %d, data: \"%s\"}", usuarioA, usuarioB, data));
+                sb.append(i < QTD_RELACIONAMENTOS ? VIRGULA_NL : NOVA_LINHA);
             }
-
-            relations.put(usuarioA, usuarioB);
-            sb.append(String.format("    {usuario_a: %d, usuario_b: %d, data: \"%s\"}", usuarioA, usuarioB, data));
-            sb.append(i < QTD_RELACIONAMENTOS ? VIRGULA_NL : NOVA_LINHA);
         }
 
         sb.append("""
@@ -189,7 +187,7 @@ public class CypherGenerator extends Generator {
 
     @Override
     protected String gerarCurtidas() {
-        Map<Integer, Integer> relations = new HashMap<>();
+        Map<Integer, Set<Integer>> relations = new HashMap<>();
 
         StringBuilder sb = new StringBuilder();
         sb.append("UNWIND [\n");
@@ -199,8 +197,8 @@ public class CypherGenerator extends Generator {
             int postId = faker.random().nextInt(1, QTD_POSTS);
             String data = getRandomDate();
 
-            if (relations.get(usuarioId) == null || !relations.get(usuarioId).equals(postId)) {
-                relations.put(usuarioId, postId);
+            if (notExists(relations, usuarioId, postId)) {
+                relations.computeIfAbsent(usuarioId, k -> new HashSet<>()).add(postId);
                 sb.append(String.format("    {usuario_id: %d, post_id: %d, data: \"%s\"}", usuarioId, postId, data));
                 sb.append(i < QTD_CURTIDAS ? VIRGULA_NL : NOVA_LINHA);
             }
@@ -218,7 +216,7 @@ public class CypherGenerator extends Generator {
 
     @Override
     protected String gerarComentarios() {
-        Map<Integer, Integer> relations = new HashMap<>();
+        Map<Integer, Set<Integer>> relations = new HashMap<>();
 
         StringBuilder sb = new StringBuilder();
         sb.append("UNWIND [\n");
@@ -229,8 +227,8 @@ public class CypherGenerator extends Generator {
             String data = getRandomDate();
             String comentario = faker.lorem().paragraph();
 
-            if (relations.get(usuarioId) == null || !relations.get(usuarioId).equals(postId)) {
-                relations.put(usuarioId, postId);
+            if (notExists(relations, usuarioId, postId)) {
+                relations.computeIfAbsent(usuarioId, k -> new HashSet<>()).add(postId);
 
                 sb.append(String.format("    {usuario_id: %d, post_id: %d, data: \"%s\", comentario: \"%s\"}",
                         usuarioId, postId, data, comentario
@@ -251,7 +249,7 @@ public class CypherGenerator extends Generator {
 
     @Override
     protected String gerarCompartilhamentos() {
-        Map<Integer, Integer> relations = new HashMap<>();
+        Map<Integer, Set<Integer>> relations = new HashMap<>();
 
         StringBuilder sb = new StringBuilder();
         sb.append("UNWIND [\n");
@@ -261,8 +259,8 @@ public class CypherGenerator extends Generator {
             int postId = faker.random().nextInt(1, QTD_POSTS);
             String data = getRandomDate();
 
-            if (relations.get(usuarioId) == null || !relations.get(usuarioId).equals(postId)) {
-                relations.put(usuarioId, postId);
+            if (notExists(relations, usuarioId, postId)) {
+                relations.computeIfAbsent(usuarioId, k -> new HashSet<>()).add(postId);
                 sb.append(String.format("    {usuario_id: %d, post_id: %d, data: \"%s\"}", usuarioId, postId, data));
                 sb.append(i < QTD_COMPARTILHAMENTOS ? VIRGULA_NL : NOVA_LINHA);
             }

@@ -3,7 +3,9 @@ package org.example.generator;
 import org.example.util.FileUtils;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Gerador de arquivo CSV para o ArangoDB
@@ -69,30 +71,30 @@ public class CsvGenerator extends Generator {
     protected String gerarTags() {
         return """
                 id,nome
-                1,"humor",
-                2,"política",
-                3,"memes",
-                4,"viagem",
-                5,"fotografia",
-                6,"arte",
-                7,"pintura",
-                8,"DIY",
-                9,"música",
-                10,"cinema",
-                11,"livros",
-                12,"cultura pop",
-                13,"comida",
-                14,"treino",
-                15,"dieta",
-                16,"tecnologia",
-                17,"programação",
-                18,"marketing",
-                19,"moda",
-                20,"maquiagem",
-                21,"lifestyle",
-                22,"pets",
-                23,"motivacional",
-                24,"curiosidades",
+                1,"humor"
+                2,"política"
+                3,"memes"
+                4,"viagem"
+                5,"fotografia"
+                6,"arte"
+                7,"pintura"
+                8,"DIY"
+                9,"música"
+                10,"cinema"
+                11,"livros"
+                12,"cultura pop"
+                13,"comida"
+                14,"treino"
+                15,"dieta"
+                16,"tecnologia"
+                17,"programação"
+                18,"marketing"
+                19,"moda"
+                20,"maquiagem"
+                21,"lifestyle"
+                22,"pets"
+                23,"motivacional"
+                24,"curiosidades"
                 25,"tutoriais"
                 """;
     }
@@ -131,22 +133,18 @@ public class CsvGenerator extends Generator {
         String formato = "%d,%d,\"%s\"\n";
         String header = "usuarioA,usuarioB,data";
 
-        Map<Integer, Integer> relations = new HashMap<>();
+        Map<Integer, Set<Integer>> relations = new HashMap<>();
         StringBuilder content = new StringBuilder();
 
-        for (int i = 0; i <= QTD_RELACIONAMENTOS; i++) {
+        for (int i = 1; i <= QTD_RELACIONAMENTOS; i++) {
             int usuarioA = faker.random().nextInt(1, QTD_USUARIOS);
             int usuarioB = faker.random().nextInt(1, QTD_USUARIOS);
             String data = getRandomDate();
 
-            if (usuarioA == usuarioB) {
-                continue;
-            } else if (relations.get(usuarioA) != null && relations.get(usuarioA).equals(usuarioB)) {
-                continue;
+            if (usuarioA != usuarioB && notExists(relations, usuarioA, usuarioB)) {
+                relations.computeIfAbsent(usuarioA, k -> new HashSet<>()).add(usuarioB);
+                content.append(String.format(formato, usuarioA, usuarioB, data));
             }
-
-            relations.put(usuarioA, usuarioB);
-            content.append(String.format(formato, i, usuarioA, usuarioB, data));
         }
 
         return header + NOVA_LINHA + content;
@@ -157,7 +155,7 @@ public class CsvGenerator extends Generator {
         String formato = "%d,%d,\"%s\"\n";
         String header = "usuarioId,postId,data";
 
-        Map<Integer, Integer> relations = new HashMap<>();
+        Map<Integer, Set<Integer>> relations = new HashMap<>();
         StringBuilder content = new StringBuilder();
 
         for (int i = 0; i <= QTD_CURTIDAS; i++) {
@@ -165,8 +163,8 @@ public class CsvGenerator extends Generator {
             int postId = faker.random().nextInt(1, QTD_POSTS);
             String data = getRandomDate();
 
-            if (relations.get(usuarioId) == null || !relations.get(usuarioId).equals(postId)) {
-                relations.put(usuarioId, postId);
+            if (notExists(relations, usuarioId, postId)) {
+                relations.computeIfAbsent(usuarioId, k -> new HashSet<>()).add(postId);
                 content.append(String.format(formato, usuarioId, postId, data));
             }
         }
@@ -179,7 +177,7 @@ public class CsvGenerator extends Generator {
         String formato = "%d,%d,\"%s\",\"%s\"\n";
         String header = "usuarioId,postId,data,comentario";
 
-        Map<Integer, Integer> relations = new HashMap<>();
+        Map<Integer, Set<Integer>> relations = new HashMap<>();
         StringBuilder content = new StringBuilder();
 
         for (int i = 0; i <= QTD_COMENTARIOS; i++) {
@@ -188,8 +186,8 @@ public class CsvGenerator extends Generator {
             String data = getRandomDate();
             String comentario = faker.lorem().paragraph();
 
-            if (relations.get(usuarioId) == null || !relations.get(usuarioId).equals(postId)) {
-                relations.put(usuarioId, postId);
+            if (notExists(relations, usuarioId, postId)) {
+                relations.computeIfAbsent(usuarioId, k -> new HashSet<>()).add(postId);
                 content.append(String.format(formato, usuarioId, postId, data, comentario));
             }
         }
@@ -202,7 +200,7 @@ public class CsvGenerator extends Generator {
         String formato = "%d,%d,\"%s\"\n";
         String header = "usuarioId,postId,data";
 
-        Map<Integer, Integer> relations = new HashMap<>();
+        Map<Integer, Set<Integer>> relations = new HashMap<>();
         StringBuilder content = new StringBuilder();
 
         for (int i = 0; i <= QTD_COMPARTILHAMENTOS; i++) {
@@ -210,8 +208,8 @@ public class CsvGenerator extends Generator {
             int postId = faker.random().nextInt(1, QTD_POSTS);
             String data = getRandomDate();
 
-            if (relations.get(usuarioId) == null || !relations.get(usuarioId).equals(postId)) {
-                relations.put(usuarioId, postId);
+            if (notExists(relations, usuarioId, postId)) {
+                relations.computeIfAbsent(usuarioId, k -> new HashSet<>()).add(postId);
                 content.append(String.format(formato, usuarioId, postId, data));
             }
         }

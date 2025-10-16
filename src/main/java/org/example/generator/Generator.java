@@ -7,6 +7,8 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import static java.time.format.DateTimeFormatter.ISO_OFFSET_DATE_TIME;
@@ -43,6 +45,10 @@ public abstract class Generator {
         ZonedDateTime zonedDtm = date.toInstant().atZone(ZoneId.of("America/Sao_Paulo"));
 
         return zonedDtm.format(ISO_OFFSET_DATE_TIME);
+    }
+
+    protected boolean notExists(Map<Integer, Set<Integer>> relations, Integer key, Integer value) {
+        return !relations.containsKey(key) || !relations.get(key).contains(value);
     }
 
     /**

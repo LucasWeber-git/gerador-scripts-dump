@@ -3,7 +3,9 @@ package org.example.generator;
 import org.example.util.FileUtils;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Gerador de código Gremlin para o Amazon Neptune e o Azure Cosmos
@@ -128,28 +130,24 @@ public class GremlinGenerator extends Generator {
 
     @Override
     protected String gerarRelacionamentos() {
-        Map<Integer, Integer> relations = new HashMap<>();
+        Map<Integer, Set<Integer>> relations = new HashMap<>();
 
         StringBuilder sb = new StringBuilder();
 
-        for (int i = 0; i <= QTD_RELACIONAMENTOS; i++) {
+        for (int i = 1; i <= QTD_RELACIONAMENTOS; i++) {
             int usuarioA = faker.random().nextInt(1, QTD_USUARIOS);
             int usuarioB = faker.random().nextInt(1, QTD_USUARIOS);
             String data = getRandomDate();
 
-            if (usuarioA == usuarioB) {
-                continue;
-            } else if (relations.get(usuarioA) != null && relations.get(usuarioA).equals(usuarioB)) {
-                continue;
+            if (usuarioA != usuarioB && notExists(relations, usuarioA, usuarioB)) {
+                relations.computeIfAbsent(usuarioA, k -> new HashSet<>()).add(usuarioB);
+
+                String cmd = ".addE('segue')" +
+                        ".from(__.V().has('Usuario','idUsuario','%d'))" +
+                        ".to(__.V().has('Usuario','idUsuario','%d'))" +
+                        ".property('data', '%s')\n";
+                sb.append(String.format(cmd, usuarioA, usuarioB, data));
             }
-
-            relations.put(usuarioA, usuarioB);
-
-            String cmd = ".addE('segue')" +
-                    ".from(__.V().has('Usuario','idUsuario','%d'))" +
-                    ".to(__.V().has('Usuario','idUsuario','%d'))" +
-                    ".property('data', '%s')\n";
-            sb.append(String.format(cmd, usuarioA, usuarioB, data));
         }
 
         return sb + NOVA_LINHA;
@@ -157,7 +155,7 @@ public class GremlinGenerator extends Generator {
 
     @Override
     protected String gerarCurtidas() {
-        Map<Integer, Integer> relations = new HashMap<>();
+        Map<Integer, Set<Integer>> relations = new HashMap<>();
 
         StringBuilder sb = new StringBuilder();
 
@@ -166,8 +164,8 @@ public class GremlinGenerator extends Generator {
             int postId = faker.random().nextInt(1, QTD_POSTS);
             String data = getRandomDate();
 
-            if (relations.get(usuarioId) == null || !relations.get(usuarioId).equals(postId)) {
-                relations.put(usuarioId, postId);
+            if (notExists(relations, usuarioId, postId)) {
+                relations.computeIfAbsent(usuarioId, k -> new HashSet<>()).add(postId);
 
                 String cmd = ".addE('curtiu')" +
                         ".from(__.V().has('Usuario','idUsuario','%d'))" +
@@ -182,7 +180,7 @@ public class GremlinGenerator extends Generator {
 
     @Override
     protected String gerarComentarios() {
-        Map<Integer, Integer> relations = new HashMap<>();
+        Map<Integer, Set<Integer>> relations = new HashMap<>();
 
         StringBuilder sb = new StringBuilder();
 
@@ -192,8 +190,8 @@ public class GremlinGenerator extends Generator {
             String data = getRandomDate();
             String comentario = faker.lorem().paragraph();
 
-            if (relations.get(usuarioId) == null || !relations.get(usuarioId).equals(postId)) {
-                relations.put(usuarioId, postId);
+            if (notExists(relations, usuarioId, postId)) {
+                relations.computeIfAbsent(usuarioId, k -> new HashSet<>()).add(postId);
 
                 String cmd = ".addE('comentou')" +
                         ".from(__.V().has('Usuario','idUsuario','%d'))" +
@@ -209,7 +207,7 @@ public class GremlinGenerator extends Generator {
 
     @Override
     protected String gerarCompartilhamentos() {
-        Map<Integer, Integer> relations = new HashMap<>();
+        Map<Integer, Set<Integer>> relations = new HashMap<>();
 
         StringBuilder sb = new StringBuilder();
 
@@ -218,8 +216,8 @@ public class GremlinGenerator extends Generator {
             int postId = faker.random().nextInt(1, QTD_POSTS);
             String data = getRandomDate();
 
-            if (relations.get(usuarioId) == null || !relations.get(usuarioId).equals(postId)) {
-                relations.put(usuarioId, postId);
+            if (notExists(relations, usuarioId, postId)) {
+                relations.computeIfAbsent(usuarioId, k -> new HashSet<>()).add(postId);
 
                 String cmd = ".addE('compartilhou')" +
                         ".from(__.V().has('Usuario','idUsuario','%d'))" +
