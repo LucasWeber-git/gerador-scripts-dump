@@ -8,11 +8,11 @@ import org.example.generator.GremlinGenerator;
 public class Main {
 
     public static void main(String[] args) {
-        int qty = 100;
+        int qtdUsuarios = 100;
 
-        Generator csvGenerator = new CsvGenerator(qty);
-        Generator cypherGenerator = new CypherGenerator(qty);
-        Generator gremlinGenerator = new GremlinGenerator(qty);
+        Generator csvGenerator = new CsvGenerator(qtdUsuarios);
+        Generator cypherGenerator = new CypherGenerator(qtdUsuarios);
+        Generator gremlinGenerator = new GremlinGenerator(qtdUsuarios);
 
         csvGenerator.gerar();
         cypherGenerator.gerar();
