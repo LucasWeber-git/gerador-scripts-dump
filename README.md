@@ -15,6 +15,8 @@ A quantidade de registros é baseada na quantidade de usuários, da seguinte for
 - QTD_COMENTARIOS = (QTD_USUARIOS * 5);
 - QTD_COMPARTILHAMENTOS = (QTD_USUARIOS * 3);
 
+Os resultados serão gerados na pasta /src/main/resources/output/
+
 ### Versão
 
 - Versão Java: 17
