@@ -68,9 +68,9 @@ public class CypherGenerator extends Generator {
         for (int i = 1; i <= QTD_POSTS; i++) {
             String conteudo = faker.lorem().paragraph();
             String data = getRandomDate();
-            int qtdCurtidas = faker.random().nextInt(0, 1000);
-            int qtdComentarios = faker.random().nextInt(0, 500);
-            int qtdCompartilhamentos = faker.random().nextInt(0, 300);
+            int qtdCurtidas = faker.random().nextInt(0, QTD_CURTIDAS);
+            int qtdComentarios = faker.random().nextInt(0, QTD_COMENTARIOS);
+            int qtdCompartilhamentos = faker.random().nextInt(0, QTD_COMPARTILHAMENTOS);
 
             sb.append(String.format("    {id: %d, conteudo: \"%s\", data: \"%s\", qtd_curtidas: %d, qtd_comentarios: %d, qtd_compartilhamentos: %d}",
                     i, conteudo, data, qtdCurtidas, qtdComentarios, qtdCompartilhamentos)

@@ -57,9 +57,9 @@ public class CsvGenerator extends Generator {
         for (int i = 1; i <= QTD_POSTS; i++) {
             String conteudo = faker.lorem().paragraph();
             String data = getRandomDate();
-            int qtdCurtidas = faker.random().nextInt(0, 10000);
-            int qtdComentarios = faker.random().nextInt(0, 1000);
-            int qtdCompartilhamentos = faker.random().nextInt(0, 100);
+            int qtdCurtidas = faker.random().nextInt(0, QTD_CURTIDAS);
+            int qtdComentarios = faker.random().nextInt(0, QTD_COMENTARIOS);
+            int qtdCompartilhamentos = faker.random().nextInt(0, QTD_COMPARTILHAMENTOS);
 
             content.append(String.format(formato, i, conteudo, data, qtdCurtidas, qtdComentarios, qtdCompartilhamentos));
         }
