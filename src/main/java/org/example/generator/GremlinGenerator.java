@@ -18,16 +18,18 @@ public class GremlinGenerator extends Generator {
 
     @Override
     public void gerar() {
-        String command = gerarUsuarios() +
-                gerarPosts() +
-                gerarTags() +
-                gerarPublicacoes() +
-                gerarRelacionamentos() +
-                gerarCurtidas() +
-                gerarComentarios() +
-                gerarCompartilhamentos();
+        String relativePath = "gremlin/script.groovy";
 
-        FileUtils.writeToFile("gremlin/script.groovy", command);
+        FileUtils.resetFile(relativePath);
+
+        FileUtils.appendToFile(relativePath, gerarUsuarios());
+        FileUtils.appendToFile(relativePath, gerarPosts());
+        FileUtils.appendToFile(relativePath, gerarTags());
+        FileUtils.appendToFile(relativePath, gerarPublicacoes());
+        FileUtils.appendToFile(relativePath, gerarRelacionamentos());
+        FileUtils.appendToFile(relativePath, gerarCurtidas());
+        FileUtils.appendToFile(relativePath, gerarComentarios());
+        FileUtils.appendToFile(relativePath, gerarCompartilhamentos());
     }
 
     @Override
