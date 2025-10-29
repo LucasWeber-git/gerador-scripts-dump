@@ -10,11 +10,13 @@ public class Main {
         Generator aqlGenerator = new AqlGenerator(qtdUsuarios);
         Generator csvGenerator = new CsvGenerator(qtdUsuarios);
         Generator cypherGenerator = new CypherGenerator(qtdUsuarios);
+        //Generator cypherBulkGenerator = new CypherBulkGenerator(qtdUsuarios);
         Generator gremlinGenerator = new GremlinGenerator(qtdUsuarios);
 
         aqlGenerator.gerar();
         csvGenerator.gerar();
         cypherGenerator.gerar();
+        //cypherBulkGenerator.gerar();
         gremlinGenerator.gerar();
     }
 

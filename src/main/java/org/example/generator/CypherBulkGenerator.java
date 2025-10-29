@@ -7,9 +7,12 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public class CypherGenerator extends Generator {
+/**
+ * Gerador de código Cypher para o Neo4j
+ */
+public class CypherBulkGenerator extends Generator {
 
-    public CypherGenerator(int qtdUsuarios) {
+    public CypherBulkGenerator(int qtdUsuarios) {
         super(qtdUsuarios);
     }
 
@@ -32,27 +35,37 @@ public class CypherGenerator extends Generator {
     @Override
     protected String gerarUsuarios() {
         StringBuilder sb = new StringBuilder();
+        sb.append("UNWIND [\n");
 
         for (int i = 1; i <= QTD_USUARIOS; i++) {
             String nome = faker.name().firstName();
             int idade = faker.random().nextInt(1, 99);
             String cidade = faker.address().city();
 
-            String cmd = "CREATE(u:Usuario {" +
-                    " id: %d," +
-                    " nome: \"%s\"," +
-                    " idade: %d," +
-                    " cidade: \"%s\"" +
-                    " });\n";
-            sb.append(String.format(cmd, i, nome, idade, cidade));
+            sb.append(String.format("    {id: %d, nome: \"%s\", idade: %d, cidade: \"%s\"}",
+                    i, nome, idade, cidade)
+            );
+            sb.append(i < QTD_USUARIOS ? VIRGULA_NL : NOVA_LINHA);
         }
 
-        return sb + NOVA_LINHA;
+        sb.append("""
+                ] AS values
+                CREATE(u:Usuario {
+                    id: values.id,
+                    nome: values.nome,
+                    idade: values.idade,
+                    cidade: values.cidade
+                });
+                
+                """);
+
+        return sb.toString();
     }
 
     @Override
     protected String gerarPosts() {
         StringBuilder sb = new StringBuilder();
+        sb.append("UNWIND [\n");
 
         for (int i = 1; i <= QTD_POSTS; i++) {
             String conteudo = faker.lorem().paragraph();
@@ -61,18 +74,26 @@ public class CypherGenerator extends Generator {
             int qtdComentarios = faker.random().nextInt(0, QTD_COMENTARIOS);
             int qtdCompartilhamentos = faker.random().nextInt(0, QTD_COMPARTILHAMENTOS);
 
-            String cmd = "CREATE(p:Post {" +
-                    " id: %d," +
-                    " conteudo: \"%s\"," +
-                    " data: \"%s\"," +
-                    " qtdCurtidas: %d," +
-                    " qtdComentarios: %d," +
-                    " qtdCompartilhamentos: %d" +
-                    " });\n";
-            sb.append(String.format(cmd, i, conteudo, data, qtdCurtidas, qtdComentarios, qtdCompartilhamentos));
+            sb.append(String.format("    {id: %d, conteudo: \"%s\", data: \"%s\", qtd_curtidas: %d, qtd_comentarios: %d, qtd_compartilhamentos: %d}",
+                    i, conteudo, data, qtdCurtidas, qtdComentarios, qtdCompartilhamentos)
+            );
+            sb.append(i < QTD_POSTS ? VIRGULA_NL : NOVA_LINHA);
         }
 
-        return sb + NOVA_LINHA;
+        sb.append("""
+                ] AS values
+                CREATE(p:Post {
+                    id: values.id,
+                    conteudo: values.conteudo,
+                    data: values.data,
+                    qtd_curtidas: values.qtd_curtidas,
+                    qtd_comentarios: values.qtd_comentarios,
+                    qtd_compartilhamentos: values.qtd_compartilhamentos
+                });
+                
+                """);
+
+        return sb.toString();
     }
 
     @Override
@@ -116,19 +137,25 @@ public class CypherGenerator extends Generator {
     @Override
     protected String gerarPublicacoes() {
         StringBuilder sb = new StringBuilder();
+        sb.append("UNWIND [\n");
 
         for (int i = 1; i <= QTD_POSTS; i++) {
             int tagId = faker.random().nextInt(1, QTD_TAGS);
             int usuarioId = faker.random().nextInt(1, QTD_USUARIOS);
 
-            String cmd = "MATCH (p:Post {id: %d}), (u:Usuario {id: %d}), (t:Tag {id: %d})\n" +
-                    "CREATE (p)-[:PUBLICADO_POR]->(u)\n" +
-                    "CREATE (p)-[:POSSUI]->(t);\n";
-
-            sb.append(String.format(cmd, i, usuarioId, tagId));
+            sb.append(String.format("    {post_id: %d, usuario_id: %d, tag_id: %d}", i, usuarioId, tagId));
+            sb.append(i < QTD_POSTS ? VIRGULA_NL : NOVA_LINHA);
         }
 
-        return sb + NOVA_LINHA;
+        sb.append("""
+                ] AS values
+                MATCH (p:Post {id: values.post_id}), (u:Usuario {id: values.usuario_id}), (t:Tag {id: values.tag_id})
+                CREATE (p)-[:PUBLICADO_POR]->(u)
+                CREATE (p)-[:POSSUI]->(t);
+                
+                """);
+
+        return sb.toString();
     }
 
     @Override
@@ -136,6 +163,7 @@ public class CypherGenerator extends Generator {
         Map<Integer, Set<Integer>> relations = new HashMap<>();
 
         StringBuilder sb = new StringBuilder();
+        sb.append("UNWIND [\n");
 
         for (int i = 1; i <= QTD_RELACIONAMENTOS; i++) {
             int usuarioA = faker.random().nextInt(1, QTD_USUARIOS);
@@ -144,15 +172,19 @@ public class CypherGenerator extends Generator {
 
             if (usuarioA != usuarioB && notExists(relations, usuarioA, usuarioB)) {
                 relations.computeIfAbsent(usuarioA, k -> new HashSet<>()).add(usuarioB);
-
-                String cmd = "MATCH (a:Usuario {id: %d}), (b:Usuario {id: %d})\n" +
-                        "CREATE (a)-[:SEGUE {data: \"%s\"}]->(b);\n";
-
-                sb.append(String.format(cmd, usuarioA, usuarioB, data));
+                sb.append(String.format("    {usuario_a: %d, usuario_b: %d, data: \"%s\"}", usuarioA, usuarioB, data));
+                sb.append(i < QTD_RELACIONAMENTOS ? VIRGULA_NL : NOVA_LINHA);
             }
         }
 
-        return sb + NOVA_LINHA;
+        sb.append("""
+                ] AS values
+                MATCH (a:Usuario {id: values.usuario_a}), (b:Usuario {id: values.usuario_b})
+                CREATE (a)-[:SEGUE {data: values.data}]->(b);
+                
+                """);
+
+        return sb.toString();
     }
 
     @Override
@@ -160,6 +192,7 @@ public class CypherGenerator extends Generator {
         Map<Integer, Set<Integer>> relations = new HashMap<>();
 
         StringBuilder sb = new StringBuilder();
+        sb.append("UNWIND [\n");
 
         for (int i = 0; i <= QTD_CURTIDAS; i++) {
             int usuarioId = faker.random().nextInt(1, QTD_USUARIOS);
@@ -168,14 +201,19 @@ public class CypherGenerator extends Generator {
 
             if (notExists(relations, usuarioId, postId)) {
                 relations.computeIfAbsent(usuarioId, k -> new HashSet<>()).add(postId);
-
-                String cmd = "MATCH (a:Usuario {id: %d}), (p:Post {id: %d})\n" +
-                        "CREATE (u)-[:CURTIU {data: \"%s\"}]->(p);\n";
-                sb.append(String.format(cmd, usuarioId, postId, data));
+                sb.append(String.format("    {usuario_id: %d, post_id: %d, data: \"%s\"}", usuarioId, postId, data));
+                sb.append(i < QTD_CURTIDAS ? VIRGULA_NL : NOVA_LINHA);
             }
         }
 
-        return sb + NOVA_LINHA;
+        sb.append("""
+                ] AS values
+                MATCH (u:Usuario {id: values.usuario_id}), (p:Post {id: values.post_id})
+                CREATE (u)-[:CURTIU {data: values.data}]->(p);
+                
+                """);
+
+        return sb.toString();
     }
 
     @Override
@@ -183,6 +221,7 @@ public class CypherGenerator extends Generator {
         Map<Integer, Set<Integer>> relations = new HashMap<>();
 
         StringBuilder sb = new StringBuilder();
+        sb.append("UNWIND [\n");
 
         for (int i = 0; i <= QTD_COMENTARIOS; i++) {
             int usuarioId = faker.random().nextInt(1, QTD_USUARIOS);
@@ -193,13 +232,21 @@ public class CypherGenerator extends Generator {
             if (notExists(relations, usuarioId, postId)) {
                 relations.computeIfAbsent(usuarioId, k -> new HashSet<>()).add(postId);
 
-                String cmd = "MATCH (a:Usuario {id: %d}), (p:Post {id: %d})\n" +
-                        "CREATE (u)-[:COMENTOU {data: \"%s\", comentario: \"%s\"}]->(p);\n";
-                sb.append(String.format(cmd, usuarioId, postId, data, comentario));
+                sb.append(String.format("    {usuario_id: %d, post_id: %d, data: \"%s\", comentario: \"%s\"}",
+                        usuarioId, postId, data, comentario
+                ));
+                sb.append(i < QTD_COMENTARIOS ? VIRGULA_NL : NOVA_LINHA);
             }
         }
 
-        return sb + NOVA_LINHA;
+        sb.append("""
+                ] AS values
+                MATCH (u:Usuario {id: values.usuario_id}), (p:Post {id: values.post_id})
+                CREATE (u)-[:COMENTOU {data: values.data, comentario: values.comentario}]->(p);
+                
+                """);
+
+        return sb.toString();
     }
 
     @Override
@@ -207,6 +254,7 @@ public class CypherGenerator extends Generator {
         Map<Integer, Set<Integer>> relations = new HashMap<>();
 
         StringBuilder sb = new StringBuilder();
+        sb.append("UNWIND [\n");
 
         for (int i = 0; i <= QTD_COMPARTILHAMENTOS; i++) {
             int usuarioId = faker.random().nextInt(1, QTD_USUARIOS);
@@ -215,14 +263,19 @@ public class CypherGenerator extends Generator {
 
             if (notExists(relations, usuarioId, postId)) {
                 relations.computeIfAbsent(usuarioId, k -> new HashSet<>()).add(postId);
-
-                String cmd = "MATCH (a:Usuario {id: %d}), (p:Post {id: %d})\n" +
-                        "CREATE (u)-[:COMPARTILHOU {data: \"%s\"}]->(p);\n";
-                sb.append(String.format(cmd, usuarioId, postId, data));
+                sb.append(String.format("    {usuario_id: %d, post_id: %d, data: \"%s\"}", usuarioId, postId, data));
+                sb.append(i < QTD_COMPARTILHAMENTOS ? VIRGULA_NL : NOVA_LINHA);
             }
         }
 
-        return sb + NOVA_LINHA;
+        sb.append("""
+                ] AS values
+                MATCH (u:Usuario {id: values.usuario_id}), (p:Post {id: values.post_id})
+                CREATE (u)-[:COMPARTILHOU {data: values.data}]->(p);
+                
+                """);
+
+        return sb.toString();
     }
 
 }
