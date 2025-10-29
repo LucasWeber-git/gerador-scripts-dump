@@ -169,7 +169,7 @@ public class CypherGenerator extends Generator {
             if (notExists(relations, usuarioId, postId)) {
                 relations.computeIfAbsent(usuarioId, k -> new HashSet<>()).add(postId);
 
-                String cmd = "MATCH (a:Usuario {id: %d}), (p:Post {id: %d})\n" +
+                String cmd = "MATCH (u:Usuario {id: %d}), (p:Post {id: %d})\n" +
                         "CREATE (u)-[:CURTIU {data: \"%s\"}]->(p);\n";
                 sb.append(String.format(cmd, usuarioId, postId, data));
             }
@@ -193,7 +193,7 @@ public class CypherGenerator extends Generator {
             if (notExists(relations, usuarioId, postId)) {
                 relations.computeIfAbsent(usuarioId, k -> new HashSet<>()).add(postId);
 
-                String cmd = "MATCH (a:Usuario {id: %d}), (p:Post {id: %d})\n" +
+                String cmd = "MATCH (u:Usuario {id: %d}), (p:Post {id: %d})\n" +
                         "CREATE (u)-[:COMENTOU {data: \"%s\", comentario: \"%s\"}]->(p);\n";
                 sb.append(String.format(cmd, usuarioId, postId, data, comentario));
             }
@@ -216,7 +216,7 @@ public class CypherGenerator extends Generator {
             if (notExists(relations, usuarioId, postId)) {
                 relations.computeIfAbsent(usuarioId, k -> new HashSet<>()).add(postId);
 
-                String cmd = "MATCH (a:Usuario {id: %d}), (p:Post {id: %d})\n" +
+                String cmd = "MATCH (u:Usuario {id: %d}), (p:Post {id: %d})\n" +
                         "CREATE (u)-[:COMPARTILHOU {data: \"%s\"}]->(p);\n";
                 sb.append(String.format(cmd, usuarioId, postId, data));
             }
